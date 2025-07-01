@@ -15,18 +15,38 @@ class _ReportAnalyzerScreenState extends State<ReportAnalyzerScreen> {
   bool _loading = false;
 
   Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final picked = await picker.pickImage(source: ImageSource.gallery);
+  final picker = ImagePicker();
+
+  final source = await showDialog<ImageSource>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text("Choose image source"),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, ImageSource.camera),
+          child: const Text("Camera"),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context, ImageSource.gallery),
+          child: const Text("Gallery"),
+        ),
+      ],
+    ),
+  );
+
+  if (source != null) {
+    final picked = await picker.pickImage(source: source);
     if (picked != null) {
       setState(() {
         _selectedImage = File(picked.path);
         _loading = true;
+        _result = '';
       });
 
-      // Dummy OCR + GPT simulation
+      // Simulate OCR + GPT
       await Future.delayed(const Duration(seconds: 2));
-      final fakeText = "Hemoglobin: 10.5 g/dL\nWBC: 7.2 x10^9/L";
-      final fakeGptResponse = "The report shows mild anemia. Consult a doctor if symptoms persist.";
+      final fakeText = "Hemoglobin: 10.5 g/dL";
+      final fakeGptResponse = "Mild anemia detected. Please consult a doctor.";
 
       setState(() {
         _result = fakeGptResponse;
@@ -34,6 +54,8 @@ class _ReportAnalyzerScreenState extends State<ReportAnalyzerScreen> {
       });
     }
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
