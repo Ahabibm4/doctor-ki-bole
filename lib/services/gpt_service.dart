@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class GptService {
-  static const _apiKey = 'AIzaSyBKelcEwLOwGfRuzr8NfL9DsF9rg_Usb1s'; // 🔁 Replace with your real API key
+  static const _apiKey = ''; // 🔁 Replace with your real API key
   static const _model = 'gemini-2.0-flash'; // You can also use 'gemini-pro'
 
   Future<String> analyzeText(String text) async {
