@@ -19,7 +19,9 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, '/symptoms');
+              },
               child: const Text('Symptom Checker'),
             ),
           ],
