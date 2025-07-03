@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../services/gpt_service.dart';
+import '../services/db_service.dart' as db;
+import '../models/saved_result.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SymptomCheckerScreen extends StatefulWidget {
   const SymptomCheckerScreen({super.key});
@@ -12,10 +15,8 @@ class SymptomCheckerScreen extends StatefulWidget {
 class _SymptomCheckerScreenState extends State<SymptomCheckerScreen> {
   final TextEditingController _symptomController = TextEditingController();
   final _gptService = GptService();
-
   String _result = '';
   bool _loading = false;
-
   late stt.SpeechToText _speech;
   bool _isListening = false;
 
@@ -27,22 +28,16 @@ class _SymptomCheckerScreenState extends State<SymptomCheckerScreen> {
 
   Future<void> _listen() async {
     if (!_isListening) {
-      print("🎙 Initializing speech...");
       bool available = await _speech.initialize();
       if (available) {
-        print("🎙 Listening...");
         setState(() => _isListening = true);
         _speech.listen(onResult: (val) {
-          print("🎤 You said: ${val.recognizedWords}");
           setState(() {
             _symptomController.text = val.recognizedWords;
           });
         });
-      } else {
-        print("❌ Speech recognition not available.");
       }
     } else {
-      print("🛑 Stopping listening...");
       setState(() => _isListening = false);
       _speech.stop();
     }
@@ -57,20 +52,29 @@ class _SymptomCheckerScreenState extends State<SymptomCheckerScreen> {
       _result = '';
     });
 
-    print("🧠 Sending to GPT: $input");
-
     final response = await _gptService.analyzeText(input);
 
     setState(() {
       _result = response;
       _loading = false;
     });
+
+    await db.DBService.insertResult(
+      SavedResult(
+        type: 'symptom',
+        input: input,
+        result: response,
+        timestamp: DateTime.now(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: const Text("Symptom Checker")),
+      appBar: AppBar(title: Text(loc.symptomChecker)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -78,9 +82,9 @@ class _SymptomCheckerScreenState extends State<SymptomCheckerScreen> {
             TextField(
               controller: _symptomController,
               maxLines: 2,
-              decoration: const InputDecoration(
-                labelText: 'Enter your symptoms',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: loc.enterSymptoms,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 10),
@@ -88,13 +92,13 @@ class _SymptomCheckerScreenState extends State<SymptomCheckerScreen> {
               children: [
                 ElevatedButton.icon(
                   icon: Icon(_isListening ? Icons.mic_off : Icons.mic),
-                  label: const Text("Voice Input"),
+                  label: Text(loc.voiceInput),
                   onPressed: _listen,
                 ),
                 const SizedBox(width: 10),
                 ElevatedButton(
                   onPressed: _analyzeSymptoms,
-                  child: const Text("Check"),
+                  child: Text(loc.check),
                 ),
               ],
             ),
