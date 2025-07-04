@@ -1,9 +1,9 @@
+import 'package:doctor_ki_bole/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../services/gpt_service.dart';
 import '../services/db_service.dart' as db;
 import '../models/saved_result.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SymptomCheckerScreen extends StatefulWidget {
   const SymptomCheckerScreen({super.key});

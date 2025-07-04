@@ -1,10 +1,10 @@
+import 'package:doctor_ki_bole/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
 import 'screens/report_analyzer_screen.dart';
 import 'screens/symptom_checker_screen.dart';
 import 'screens/saved_results_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   runApp(const DoctorKiBoleApp());
