@@ -23,6 +23,7 @@ dependencies:
   image_picker: ^1.0.7
   syncfusion_flutter_pdf: ^30.1.38
   permission_handler: ^12.0.1
+  share_plus: ^7.2.1
 
 
 dev_dependencies:

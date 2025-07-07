@@ -122,7 +122,7 @@ abstract class AppLocalizations {
   /// No description provided for @enterSymptoms.
   ///
   /// In en, this message translates to:
-  /// **'Enter your symptoms'**
+  /// **'Enter your symptoms here...'**
   String get enterSymptoms;
 
   /// No description provided for @voiceInput.
@@ -190,6 +190,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete'**
   String get delete;
+
+  /// No description provided for @analyzeReportDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan or upload report image or PDF'**
+  String get analyzeReportDesc;
+
+  /// No description provided for @symptomCheckerDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Get GPT help for your symptoms'**
+  String get symptomCheckerDesc;
+
+  /// No description provided for @savedResultsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'View your previous analyses'**
+  String get savedResultsDesc;
+
+  /// No description provided for @switchLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch Language'**
+  String get switchLanguage;
+
+  /// No description provided for @pickFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick File'**
+  String get pickFile;
+
+  /// No description provided for @useCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Camera'**
+  String get useCamera;
+
+  /// No description provided for @pickFromGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick from Gallery'**
+  String get pickFromGallery;
+
+  /// No description provided for @pickPdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a PDF File'**
+  String get pickPdf;
+
+  /// No description provided for @previewText.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get previewText;
+
+  /// No description provided for @optionalNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional Note'**
+  String get optionalNote;
+
+  /// No description provided for @noteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your personal note (optional)'**
+  String get noteHint;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// No description provided for @noResultsPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'No results yet'**
+  String get noResultsPlaceholder;
+
+  /// No description provided for @uploadReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload Image or PDF'**
+  String get uploadReport;
+
+  /// No description provided for @cameraDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera permission was denied'**
+  String get cameraDenied;
+
+  /// No description provided for @clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
+
+  /// No description provided for @micPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone permission is required for voice input.'**
+  String get micPermissionDenied;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @share.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share;
+
+  /// No description provided for @voiceInputNotSupportedOnEmulator.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice input is not supported on emulator. Please use a real device.'**
+  String get voiceInputNotSupportedOnEmulator;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

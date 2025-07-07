@@ -1,5 +1,5 @@
-import 'package:doctor_ki_bole/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:doctor_ki_bole/l10n/app_localizations.dart';
 
 class HomeScreen extends StatelessWidget {
   final VoidCallback onToggleLocale;
@@ -13,33 +13,83 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(loc.appTitle),
+        centerTitle: true,
         actions: [
           IconButton(
-            icon: Text(isBangla ? '🇬🇧' : '🇧🇩', style: const TextStyle(fontSize: 20)),
-            tooltip: 'Switch Language',
+            icon: Text(isBangla ? '🇬🇧' : '🇧🇩', style: const TextStyle(fontSize: 22)),
+            tooltip: loc.switchLanguage,
             onPressed: onToggleLocale,
-          )
+          ),
         ],
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, '/report'),
-              child: Text(loc.analyzeReport),
+            _buildActionCard(
+              context,
+              icon: Icons.upload_file,
+              title: loc.analyzeReport,
+              subtitle: loc.analyzeReportDesc,
+              route: '/report',
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, '/symptoms'),
-              child: Text(loc.symptomChecker),
+            _buildActionCard(
+              context,
+              icon: Icons.healing,
+              title: loc.symptomChecker,
+              subtitle: loc.symptomCheckerDesc,
+              route: '/symptoms',
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, '/saved'),
-              child: Text(loc.savedResults),
+            _buildActionCard(
+              context,
+              icon: Icons.history,
+              title: loc.savedResults,
+              subtitle: loc.savedResultsDesc,
+              route: '/saved',
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionCard(BuildContext context,
+      {required IconData icon,
+      required String title,
+      required String subtitle,
+      required String route}) {
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(context, route),
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        elevation: 3,
+        color: Colors.teal.shade50,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              Icon(icon, size: 36, color: Colors.teal.shade700),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title,
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 4),
+                    Text(subtitle,
+                        style: TextStyle(
+                            fontSize: 14, color: Colors.grey.shade700)),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right, color: Colors.teal),
+            ],
+          ),
         ),
       ),
     );

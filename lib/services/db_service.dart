@@ -34,21 +34,21 @@ class DBService {
 
   static Future<int> insertResult(SavedResult result) async {
     final db = await database;
-    return db.insert('results', result.toMap());
+    return await db.insert('results', result.toMap());
   }
 
   static Future<List<SavedResult>> getAllResults() async {
     final db = await database;
-    final maps = await db.query('results', orderBy: 'timestamp DESC');
+    final List<Map<String, dynamic>> maps = await db.query('results', orderBy: 'timestamp DESC');
     return maps.map((map) => SavedResult.fromMap(map)).toList();
   }
 
   static Future<int> deleteResult(int id) async {
     final db = await database;
-    return db.delete('results', where: 'id = ?', whereArgs: [id]);
+    return await db.delete('results', where: 'id = ?', whereArgs: [id]);
   }
 
-  static Future<void> clearAll() async {
+  static Future<void> clearAllResults() async {
     final db = await database;
     await db.delete('results');
   }
