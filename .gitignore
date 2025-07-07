@@ -53,3 +53,4 @@ build/
 .idea/
 *.iml
 android/local.properties
+.env

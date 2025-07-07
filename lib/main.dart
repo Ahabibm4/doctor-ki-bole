@@ -1,12 +1,22 @@
-import 'package:doctor_ki_bole/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
 import 'screens/home_screen.dart';
 import 'screens/report_analyzer_screen.dart';
 import 'screens/symptom_checker_screen.dart';
 import 'screens/saved_results_screen.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  try {
+    await dotenv.load(fileName: ".env");
+    print("✅ .env loaded successfully. Key: ${dotenv.env['GEMINI_API_KEY']}");
+  } catch (e) {
+    print("❌ Failed to load .env: $e");
+  }
+
   runApp(const DoctorKiBoleApp());
 }
 
@@ -18,7 +28,7 @@ class DoctorKiBoleApp extends StatefulWidget {
 }
 
 class _DoctorKiBoleAppState extends State<DoctorKiBoleApp> {
-  Locale _locale = const Locale('bn'); // default to Bangla
+  Locale _locale = const Locale('bn');
 
   void _toggleLocale() {
     setState(() {

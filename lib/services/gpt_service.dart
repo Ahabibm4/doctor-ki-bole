@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class GptService {
-  static const _apiKey = '8888'; // 🔁 Replace with your real API key
-  static const _model = 'gemini-2.0-flash'; // You can also use 'gemini-pro'
+  final _apiKey = dotenv.env['GEMINI_API_KEY'];
+  static const _model = 'gemini-2.0-flash';
 
-  Future<String> analyzeText(String text) async {
+  Future<String> generateResponse(String text) async {
     final url = Uri.parse(
-        'https://generativelanguage.googleapis.com/v1beta/models/$_model:generateContent?key=$_apiKey');
+      'https://generativelanguage.googleapis.com/v1beta/models/$_model:generateContent?key=$_apiKey',
+    );
 
     final body = jsonEncode({
       "contents": [
@@ -19,22 +21,17 @@ class GptService {
       ]
     });
 
-    final headers = {
-      'Content-Type': 'application/json',
-    };
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: body,
+    );
 
-    try {
-      final response = await http.post(url, headers: headers, body: body);
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final generated = data['candidates'][0]['content']['parts'][0]['text'];
-        return generated.trim();
-      } else {
-        return "❌ Gemini API Error ${response.statusCode}: ${response.body}";
-      }
-    } catch (e) {
-      return "❌ Request failed: $e";
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['candidates'][0]['content']['parts'][0]['text'] ?? '⚠️ No response';
+    } else {
+      return "❌ API error ${response.statusCode}: ${response.body}";
     }
   }
 }

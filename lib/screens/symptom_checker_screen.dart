@@ -51,8 +51,8 @@ class _SymptomCheckerScreenState extends State<SymptomCheckerScreen> {
       _loading = true;
       _result = '';
     });
-
-    final response = await _gptService.analyzeText(input);
+    
+    final response = await _gptService.generateResponse(input);
 
     setState(() {
       _result = response;

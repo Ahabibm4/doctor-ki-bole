@@ -91,7 +91,7 @@ class _ReportAnalyzerScreenState extends State<ReportAnalyzerScreen> {
     });
 
     final ocrText = await OCRService.extractTextFromImage(imageFile);
-    final response = await _gptService.analyzeText(ocrText);
+    final response = await _gptService.generateResponse(ocrText);
 
     setState(() {
       _result = response;
@@ -123,7 +123,7 @@ class _ReportAnalyzerScreenState extends State<ReportAnalyzerScreen> {
       final text = PdfTextExtractor(document).extractText();
       document.dispose();
 
-      final response = await _gptService.analyzeText(text);
+      final response = await _gptService.generateResponse(text);
 
       setState(() {
         _result = response;
