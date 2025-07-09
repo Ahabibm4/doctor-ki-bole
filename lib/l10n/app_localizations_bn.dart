@@ -12,7 +12,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get appTitle => 'ডাক্তার কি বলে';
 
   @override
-  String get analyzeReport => 'রিপোর্ট বিশ্লেষণ করুন';
+  String get analyzeReport => 'রিপোর্ট বিশ্লেষণ';
 
   @override
   String get symptomChecker => 'লক্ষণ যাচাই';
@@ -72,16 +72,16 @@ class AppLocalizationsBn extends AppLocalizations {
   String get pickFile => 'ফাইল বেছে নিন';
 
   @override
-  String get useCamera => 'ক্যামেরা ব্যবহার করুন';
+  String get useCamera => 'ক্যামেরা দিয়ে ছবি তুলুন';
 
   @override
-  String get pickFromGallery => 'গ্যালারি থেকে বাছাই করুন';
+  String get pickFromGallery => 'গ্যালারি থেকে ছবি বাছুন';
 
   @override
-  String get pickPdf => 'PDF বাছাই করুন';
+  String get pickPdf => 'PDF ফাইল বাছুন';
 
   @override
-  String get previewText => 'পূর্বরূপ';
+  String get previewText => 'এক্সট্রাক্ট করা টেক্সটের প্রিভিউ';
 
   @override
   String get optionalNote => 'ঐচ্ছিক নোট লিখুন';
@@ -90,19 +90,19 @@ class AppLocalizationsBn extends AppLocalizations {
   String get noteHint => 'আপনার নিজের মন্তব্য দিন (ঐচ্ছিক)';
 
   @override
-  String get cancel => 'বাতিল';
+  String get cancel => 'বাতিল করুন';
 
   @override
   String get ok => 'ঠিক আছে';
 
   @override
-  String get noResultsPlaceholder => 'এখনও কিছু ফলাফল নেই';
+  String get noResultsPlaceholder => 'বিশ্লেষণের জন্য একটি রিপোর্ট আপলোড করুন।';
 
   @override
-  String get uploadReport => 'ছবি / PDF আপলোড করুন';
+  String get uploadReport => 'রিপোর্ট আপলোড করুন';
 
   @override
-  String get cameraDenied => 'ক্যামেরার অনুমতি প্রত্যাখ্যান করা হয়েছে';
+  String get cameraDenied => '❌ ক্যামেরার অনুমতি দেওয়া হয়নি।';
 
   @override
   String get clear => 'পরিষ্কার করুন';
@@ -111,11 +111,34 @@ class AppLocalizationsBn extends AppLocalizations {
   String get micPermissionDenied => 'ভয়েস ইনপুটের জন্য মাইক্রোফোন অনুমতি প্রয়োজন।';
 
   @override
-  String get retry => 'আবার চেষ্টা করুন';
+  String get retry => 'পুনরায় চেষ্টা করুন';
 
   @override
   String get share => 'শেয়ার করুন';
 
   @override
-  String get voiceInputNotSupportedOnEmulator => 'ইমুলেটরে ভয়েস ইনপুট সমর্থিত নয়। বাস্তব ডিভাইসে ব্যবহার করুন।';
+  String get voiceInputNotSupportedOnEmulator => 'এই ডিভাইসে বা এমুলেটরে ভয়েস ইনপুট সমর্থিত নয়।';
+
+  @override
+  String get noInternetForVoiceInput => 'ভয়েস ইনপুটের জন্য ইন্টারনেট সংযোগ প্রয়োজন।';
+
+  @override
+  String get noInternetForAnalysis => 'ইন্টারনেট ছাড়া উপসর্গ বিশ্লেষণ করা সম্ভব না।';
+
+  @override
+  String get deleteConfirm => 'আপনি কি এই রেকর্ডটি মুছে ফেলতে চান?';
+
+  @override
+  String get tapToRetryVoiceInput => 'আবার চেষ্টা করতে মাইক্রোফোন আইকনে চাপ দিন।';
+
+  @override
+  String speechRecognitionError(Object error) {
+    return 'ভয়েস শনাক্তকরণ ব্যর্থ হয়েছে: $error।';
+  }
+
+  @override
+  String get toggleDarkMode => 'ডার্ক মোড চালু/বন্ধ করুন';
+
+  @override
+  String get fileTooLarge => '❌ ফাইলটি খুব বড় (সর্বোচ্চ ৫ এমবি)। ছোট একটি ফাইল নির্বাচন করুন।';
 }

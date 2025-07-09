@@ -73,5 +73,27 @@
   "retry": "Retry",
   "share": "Share",
   "voiceInputNotSupportedOnEmulator": "Voice input is not supported on emulator. Please use a real device.",
-  "micPermissionDenied": "Microphone permission is required for voice input."
+  "micPermissionDenied": "Microphone permission is required for voice input.",
+  "noInternetForVoiceInput": "Voice input requires an internet connection.",
+  "noInternetForAnalysis": "Cannot analyze symptoms without internet.",
+  "deleteConfirm": "Are you sure you want to delete this entry?",
+  "cancel": "Cancel",
+  "voiceInputNotSupportedOnEmulator": "Voice input is not supported on emulator or this device.",
+  "noInternetForVoiceInput": "Internet is required for voice input.",
+  "tapToRetryVoiceInput": "Please tap the microphone again to retry.",
+  "speechRecognitionError": "Voice recognition failed: {error}.",
+  "toggleDarkMode": "Toggle Dark Mode",
+  "fileTooLarge": "❌ File is too large (max 5MB). Please choose a smaller file.",
+  "uploadReport": "Upload Report",
+  "cameraDenied": "❌ Camera permission denied.",
+  "previewText": "Preview of extracted text",
+  "analyzeReport": "Analyze Report",
+  "clear": "Clear",
+  "retry": "Retry",
+  "share": "Share",
+  "noResultsPlaceholder": "Please upload a report to analyze.",
+  "useCamera": "Take Photo with Camera",
+  "pickFromGallery": "Pick Image from Gallery",
+  "pickPdf": "Pick a PDF File"
+
 }

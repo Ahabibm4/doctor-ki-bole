@@ -72,16 +72,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pickFile => 'Pick File';
 
   @override
-  String get useCamera => 'Use Camera';
+  String get useCamera => 'Take Photo with Camera';
 
   @override
-  String get pickFromGallery => 'Pick from Gallery';
+  String get pickFromGallery => 'Pick Image from Gallery';
 
   @override
   String get pickPdf => 'Pick a PDF File';
 
   @override
-  String get previewText => 'Preview';
+  String get previewText => 'Preview of extracted text';
 
   @override
   String get optionalNote => 'Optional Note';
@@ -96,13 +96,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ok => 'OK';
 
   @override
-  String get noResultsPlaceholder => 'No results yet';
+  String get noResultsPlaceholder => 'Please upload a report to analyze.';
 
   @override
-  String get uploadReport => 'Upload Image or PDF';
+  String get uploadReport => 'Upload Report';
 
   @override
-  String get cameraDenied => 'Camera permission was denied';
+  String get cameraDenied => '❌ Camera permission denied.';
 
   @override
   String get clear => 'Clear';
@@ -117,5 +117,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get share => 'Share';
 
   @override
-  String get voiceInputNotSupportedOnEmulator => 'Voice input is not supported on emulator. Please use a real device.';
+  String get voiceInputNotSupportedOnEmulator => 'Voice input is not supported on emulator or this device.';
+
+  @override
+  String get noInternetForVoiceInput => 'Internet is required for voice input.';
+
+  @override
+  String get noInternetForAnalysis => 'Cannot analyze symptoms without internet.';
+
+  @override
+  String get deleteConfirm => 'Are you sure you want to delete this entry?';
+
+  @override
+  String get tapToRetryVoiceInput => 'Please tap the microphone again to retry.';
+
+  @override
+  String speechRecognitionError(Object error) {
+    return 'Voice recognition failed: $error.';
+  }
+
+  @override
+  String get toggleDarkMode => 'Toggle Dark Mode';
+
+  @override
+  String get fileTooLarge => '❌ File is too large (max 5MB). Please choose a smaller file.';
 }

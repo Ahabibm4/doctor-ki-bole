@@ -65,5 +65,27 @@
   "retry": "আবার চেষ্টা করুন",
   "share": "শেয়ার করুন",
   "voiceInputNotSupportedOnEmulator": "ইমুলেটরে ভয়েস ইনপুট সমর্থিত নয়। বাস্তব ডিভাইসে ব্যবহার করুন।",
-  "micPermissionDenied": "ভয়েস ইনপুটের জন্য মাইক্রোফোন অনুমতি প্রয়োজন।"
+  "micPermissionDenied": "ভয়েস ইনপুটের জন্য মাইক্রোফোন অনুমতি প্রয়োজন।",
+  "noInternetForVoiceInput": "ভয়েস ইনপুট চালাতে ইন্টারনেট প্রয়োজন।",
+  "noInternetForAnalysis": "ইন্টারনেট ছাড়া উপসর্গ বিশ্লেষণ করা সম্ভব না।",
+  "deleteConfirm": "আপনি কি এই রেকর্ডটি মুছে ফেলতে চান?",
+  "cancel": "বাতিল করুন",
+  "voiceInputNotSupportedOnEmulator": "এই ডিভাইসে বা এমুলেটরে ভয়েস ইনপুট সমর্থিত নয়।",
+  "noInternetForVoiceInput": "ভয়েস ইনপুটের জন্য ইন্টারনেট সংযোগ প্রয়োজন।",
+  "tapToRetryVoiceInput": "আবার চেষ্টা করতে মাইক্রোফোন আইকনে চাপ দিন।",
+  "speechRecognitionError": "ভয়েস শনাক্তকরণ ব্যর্থ হয়েছে: {error}।",
+  "toggleDarkMode": "ডার্ক মোড চালু/বন্ধ করুন",
+  "fileTooLarge": "❌ ফাইলটি খুব বড় (সর্বোচ্চ ৫ এমবি)। ছোট একটি ফাইল নির্বাচন করুন।",
+  "uploadReport": "রিপোর্ট আপলোড করুন",
+  "cameraDenied": "❌ ক্যামেরার অনুমতি দেওয়া হয়নি।",
+  "previewText": "এক্সট্রাক্ট করা টেক্সটের প্রিভিউ",
+  "analyzeReport": "রিপোর্ট বিশ্লেষণ",
+  "clear": "পরিষ্কার করুন",
+  "retry": "পুনরায় চেষ্টা করুন",
+  "share": "শেয়ার করুন",
+  "noResultsPlaceholder": "বিশ্লেষণের জন্য একটি রিপোর্ট আপলোড করুন।",
+  "useCamera": "ক্যামেরা দিয়ে ছবি তুলুন",
+  "pickFromGallery": "গ্যালারি থেকে ছবি বাছুন",
+  "pickPdf": "PDF ফাইল বাছুন"
+
 }

@@ -1,5 +1,7 @@
-import 'package:doctor_ki_bole/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:doctor_ki_bole/l10n/app_localizations.dart';
+
 import '../services/db_service.dart' as db;
 import '../models/saved_result.dart';
 
@@ -14,6 +16,12 @@ class _SavedResultsScreenState extends State<SavedResultsScreen> {
   List<SavedResult> _results = [];
   bool _loading = true;
 
+  @override
+  void initState() {
+    super.initState();
+    _loadResults();
+  }
+
   Future<void> _loadResults() async {
     final data = await db.DBService.getAllResults();
     setState(() {
@@ -22,87 +30,126 @@ class _SavedResultsScreenState extends State<SavedResultsScreen> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _loadResults();
+  Future<void> _confirmDelete(BuildContext context, int id) async {
+    final loc = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(loc.delete),
+        content: Text(loc.deleteConfirm),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(loc.cancel)),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: colorScheme.errorContainer,
+              foregroundColor: colorScheme.onErrorContainer,
+            ),
+            child: Text(loc.delete),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      await db.DBService.deleteResult(id);
+      _loadResults();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       appBar: AppBar(title: Text(loc.savedResults)),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _results.isEmpty
-              ? Center(child: Text(loc.noSavedResults))
-              : ListView.builder(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  itemCount: _results.length,
-                  itemBuilder: (context, index) {
-                    final r = _results[index];
-                    return Card(
-                      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      elevation: 3,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
+              ? Center(
+                  child: Text(
+                    loc.noSavedResults,
+                    style: textTheme.bodyLarge?.copyWith(color: colorScheme.outline),
+                  ),
+                )
+              : RefreshIndicator(
+                  onRefresh: _loadResults,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    itemCount: _results.length,
+                    itemBuilder: (context, index) {
+                      final r = _results[index];
+                      final formattedDate = DateFormat('yyyy-MM-dd HH:mm')
+                          .format(r.timestamp.toLocal());
+
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        child: Card(
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          color: colorScheme.surfaceVariant,
+                          child: Padding(
+                            padding: const EdgeInsets.all(14),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Chip(
-                                  label: Text(
-                                    r.type == 'report' ? loc.analyzeReport : loc.symptomChecker,
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                  backgroundColor: r.type == 'report' ? Colors.teal : Colors.blue,
+                                Row(
+                                  children: [
+                                    Chip(
+                                      label: Text(
+                                        r.type == 'report' ? loc.analyzeReport : loc.symptomChecker,
+                                        style: const TextStyle(color: Colors.white),
+                                      ),
+                                      backgroundColor: r.type == 'report'
+                                          ? colorScheme.primary
+                                          : colorScheme.secondary,
+                                    ),
+                                    const Spacer(),
+                                    IconButton(
+                                      icon: Icon(Icons.delete, color: colorScheme.error),
+                                      tooltip: loc.delete,
+                                      onPressed: () => _confirmDelete(context, r.id!),
+                                    ),
+                                  ],
                                 ),
-                                const Spacer(),
-                                IconButton(
-                                  icon: const Icon(Icons.delete, color: Colors.red),
-                                  tooltip: loc.delete,
-                                  onPressed: () async {
-                                    await db.DBService.deleteResult(r.id!);
-                                    _loadResults();
-                                  },
+                                const SizedBox(height: 6),
+                                _buildScrollableText("📥 ${r.input}", textTheme.bodyMedium),
+                                const SizedBox(height: 6),
+                                _buildScrollableText("💡 ${r.result}", textTheme.bodySmall,
+                                    maxHeight: 150),
+                                const SizedBox(height: 6),
+                                Text(
+                                  "⏰ $formattedDate",
+                                  style: textTheme.labelSmall?.copyWith(
+                                    color: colorScheme.outline,
+                                  ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 8),
-                            Text(
-                              "📥 ${r.input}",
-                              style: const TextStyle(fontWeight: FontWeight.w500),
-                              softWrap: true,
-                            ),
-                            const SizedBox(height: 8),
-                            Container(
-                              constraints: const BoxConstraints(maxHeight: 150),
-                              padding: const EdgeInsets.only(right: 4),
-                              child: Scrollbar(
-                                thumbVisibility: true,
-                                child: SingleChildScrollView(
-                                  child: Text(
-                                    "💡 ${r.result}",
-                                    style: const TextStyle(fontSize: 14),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              "⏰ ${r.timestamp.toLocal()}",
-                              style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
+    );
+  }
+
+  Widget _buildScrollableText(String text, TextStyle? style, {double maxHeight = 80}) {
+    return Container(
+      constraints: BoxConstraints(maxHeight: maxHeight),
+      padding: const EdgeInsets.only(right: 4),
+      child: Scrollbar(
+        thumbVisibility: true,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Text(text, style: style),
+        ),
+      ),
     );
   }
 }

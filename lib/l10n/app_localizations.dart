@@ -224,13 +224,13 @@ abstract class AppLocalizations {
   /// No description provided for @useCamera.
   ///
   /// In en, this message translates to:
-  /// **'Use Camera'**
+  /// **'Take Photo with Camera'**
   String get useCamera;
 
   /// No description provided for @pickFromGallery.
   ///
   /// In en, this message translates to:
-  /// **'Pick from Gallery'**
+  /// **'Pick Image from Gallery'**
   String get pickFromGallery;
 
   /// No description provided for @pickPdf.
@@ -242,7 +242,7 @@ abstract class AppLocalizations {
   /// No description provided for @previewText.
   ///
   /// In en, this message translates to:
-  /// **'Preview'**
+  /// **'Preview of extracted text'**
   String get previewText;
 
   /// No description provided for @optionalNote.
@@ -272,19 +272,19 @@ abstract class AppLocalizations {
   /// No description provided for @noResultsPlaceholder.
   ///
   /// In en, this message translates to:
-  /// **'No results yet'**
+  /// **'Please upload a report to analyze.'**
   String get noResultsPlaceholder;
 
   /// No description provided for @uploadReport.
   ///
   /// In en, this message translates to:
-  /// **'Upload Image or PDF'**
+  /// **'Upload Report'**
   String get uploadReport;
 
   /// No description provided for @cameraDenied.
   ///
   /// In en, this message translates to:
-  /// **'Camera permission was denied'**
+  /// **'❌ Camera permission denied.'**
   String get cameraDenied;
 
   /// No description provided for @clear.
@@ -314,8 +314,50 @@ abstract class AppLocalizations {
   /// No description provided for @voiceInputNotSupportedOnEmulator.
   ///
   /// In en, this message translates to:
-  /// **'Voice input is not supported on emulator. Please use a real device.'**
+  /// **'Voice input is not supported on emulator or this device.'**
   String get voiceInputNotSupportedOnEmulator;
+
+  /// No description provided for @noInternetForVoiceInput.
+  ///
+  /// In en, this message translates to:
+  /// **'Internet is required for voice input.'**
+  String get noInternetForVoiceInput;
+
+  /// No description provided for @noInternetForAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot analyze symptoms without internet.'**
+  String get noInternetForAnalysis;
+
+  /// No description provided for @deleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this entry?'**
+  String get deleteConfirm;
+
+  /// No description provided for @tapToRetryVoiceInput.
+  ///
+  /// In en, this message translates to:
+  /// **'Please tap the microphone again to retry.'**
+  String get tapToRetryVoiceInput;
+
+  /// No description provided for @speechRecognitionError.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice recognition failed: {error}.'**
+  String speechRecognitionError(Object error);
+
+  /// No description provided for @toggleDarkMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle Dark Mode'**
+  String get toggleDarkMode;
+
+  /// No description provided for @fileTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'❌ File is too large (max 5MB). Please choose a smaller file.'**
+  String get fileTooLarge;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

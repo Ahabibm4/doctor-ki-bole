@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 import '../services/gpt_service.dart';
 import '../services/ocr_service.dart';
@@ -25,6 +26,9 @@ class _ReportAnalyzerScreenState extends State<ReportAnalyzerScreen> {
   String _result = '';
   String _previewText = '';
   bool _loading = false;
+  bool _uploading = false;
+
+  static const int _maxFileSize = 10 * 1024 * 1024; // 10MB
 
   String _applyFallback(String response, GptLanguage lang) {
     final fallback = lang == GptLanguage.en
@@ -33,10 +37,12 @@ class _ReportAnalyzerScreenState extends State<ReportAnalyzerScreen> {
     return response.trim().isEmpty || response.startsWith('❌') ? fallback : response;
   }
 
-  Future<void> _pickImageOrPdf() async {
+  Future<void> _pickFile() async {
     final loc = AppLocalizations.of(context)!;
 
-    final option = await showModalBottomSheet<String>(
+    setState(() => _uploading = true);
+
+    final choice = await showModalBottomSheet<String>(
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -63,112 +69,117 @@ class _ReportAnalyzerScreenState extends State<ReportAnalyzerScreen> {
       ),
     );
 
-    if (option == 'camera') {
-      final granted = await Permission.camera.request();
-      if (!granted.isGranted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(loc.cameraDenied)),
-        );
+    File? pickedFile;
+
+    try {
+      if (choice == 'camera') {
+        if (!await Permission.camera.request().isGranted) {
+          _showError(loc.cameraDenied);
+          return;
+        }
+        final image = await ImagePicker().pickImage(source: ImageSource.camera);
+        if (image != null) pickedFile = File(image.path);
+      } else if (choice == 'gallery') {
+        final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+        if (image != null) pickedFile = File(image.path);
+      } else if (choice == 'pdf') {
+        final file = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
+        if (file?.files.single.path != null) pickedFile = File(file!.files.single.path!);
+      }
+
+      if (pickedFile == null) return;
+
+      if (await pickedFile.length() > _maxFileSize) {
+        _showError(loc.fileTooLarge);
         return;
       }
-      final picked = await ImagePicker().pickImage(source: ImageSource.camera);
-      if (picked != null) await _processImage(File(picked.path));
-    } else if (option == 'gallery') {
-      final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (picked != null) await _processImage(File(picked.path));
-    } else if (option == 'pdf') {
-      final picked = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['pdf'],
-      );
-      if (picked != null && picked.files.single.path != null) {
-        await _processPdf(File(picked.files.single.path!));
+
+      if (pickedFile.path.toLowerCase().endsWith('.pdf')) {
+        await _processPdf(pickedFile);
+      } else {
+        await _processImage(pickedFile);
       }
+    } finally {
+      setState(() => _uploading = false);
     }
   }
 
-  Future<void> _processImage(File imageFile) async {
+  Future<void> _processImage(File file) async {
     setState(() {
       _loading = true;
+      _selectedFile = file;
       _result = '';
       _previewText = '';
-      _selectedFile = imageFile;
     });
 
-    final text = await OCRService.extractTextFromImage(imageFile);
+    final extractedText = await OCRService.extractTextFromImage(file);
+    if (extractedText.trim().isEmpty) {
+      setState(() => _loading = false);
+      _showError("❌ Couldn’t extract text. Try with a clearer photo.");
+      return;
+    }
 
+    await _analyzeText(extractedText);
+  }
+
+  Future<void> _processPdf(File file) async {
+    setState(() {
+      _loading = true;
+      _selectedFile = file;
+      _result = '';
+      _previewText = '';
+    });
+
+    try {
+      final bytes = await file.readAsBytes();
+      final doc = PdfDocument(inputBytes: bytes);
+      final extractedText = PdfTextExtractor(doc).extractText();
+      doc.dispose();
+
+      if (extractedText.trim().isEmpty) {
+        setState(() => _loading = false);
+        _showError("❌ PDF contains no readable text.");
+        return;
+      }
+
+      await _analyzeText(extractedText);
+    } catch (e) {
+      setState(() => _loading = false);
+      _showError("❌ Failed to process PDF: $e");
+    }
+  }
+
+  Future<void> _analyzeText(String inputText) async {
     final langCode = Localizations.localeOf(context).languageCode;
     final gptLang = langCode == 'en' ? GptLanguage.en : GptLanguage.bn;
+    final connectivity = await Connectivity().checkConnectivity();
 
-    final rawResponse = await _gptService.generateResponse(
-      text,
+    if (connectivity == ConnectivityResult.none) {
+      setState(() => _loading = false);
+      _showError("❌ No internet connection.");
+      return;
+    }
+
+    final gptResponse = await _gptService.generateResponse(
+      inputText,
       type: GptPromptType.report,
       lang: gptLang,
     );
 
-    final gptOutput = _applyFallback(rawResponse, gptLang);
+    final finalText = _applyFallback(gptResponse, gptLang);
 
     setState(() {
-      _previewText = text;
-      _result = gptOutput;
+      _previewText = inputText.length > 500 ? '${inputText.substring(0, 500)}...' : inputText;
+      _result = finalText;
       _loading = false;
     });
 
-    await db.DBService.insertResult(
-      SavedResult(
-        type: 'report',
-        input: text,
-        result: gptOutput,
-        timestamp: DateTime.now(),
-      ),
-    );
-  }
-
-  Future<void> _processPdf(File pdfFile) async {
-    setState(() {
-      _loading = true;
-      _result = '';
-      _previewText = '';
-      _selectedFile = pdfFile;
-    });
-
-    try {
-      final bytes = await pdfFile.readAsBytes();
-      final document = PdfDocument(inputBytes: bytes);
-      final text = PdfTextExtractor(document).extractText();
-      document.dispose();
-
-      final langCode = Localizations.localeOf(context).languageCode;
-      final gptLang = langCode == 'en' ? GptLanguage.en : GptLanguage.bn;
-
-      final rawResponse = await _gptService.generateResponse(
-        text,
-        type: GptPromptType.report,
-        lang: gptLang,
-      );
-
-      final gptOutput = _applyFallback(rawResponse, gptLang);
-
-      setState(() {
-        _previewText = text.length > 500 ? '${text.substring(0, 500)}...' : text;
-        _result = gptOutput;
-        _loading = false;
-      });
-
-      await db.DBService.insertResult(
-        SavedResult(
-          type: 'report',
-          input: text,
-          result: gptOutput,
-          timestamp: DateTime.now(),
-        ),
-      );
-    } catch (e) {
-      setState(() => _loading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("❌ Failed to process PDF: $e")),
-      );
-    }
+    await db.DBService.insertResult(SavedResult(
+      type: 'report',
+      input: inputText,
+      result: finalText,
+      timestamp: DateTime.now(),
+    ));
   }
 
   void _clear() {
@@ -179,15 +190,10 @@ class _ReportAnalyzerScreenState extends State<ReportAnalyzerScreen> {
     });
   }
 
-  void _retry() async {
+  void _retry() {
     if (_selectedFile == null) return;
-
     final ext = _selectedFile!.path.split('.').last.toLowerCase();
-    if (ext == 'pdf') {
-      await _processPdf(_selectedFile!);
-    } else {
-      await _processImage(_selectedFile!);
-    }
+    ext == 'pdf' ? _processPdf(_selectedFile!) : _processImage(_selectedFile!);
   }
 
   void _shareResult() {
@@ -196,9 +202,15 @@ class _ReportAnalyzerScreenState extends State<ReportAnalyzerScreen> {
     }
   }
 
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       appBar: AppBar(title: Text(loc.analyzeReport)),
@@ -207,40 +219,47 @@ class _ReportAnalyzerScreenState extends State<ReportAnalyzerScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ElevatedButton.icon(
-              icon: const Icon(Icons.upload_file),
-              label: Text(loc.uploadReport),
-              style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(45)),
-              onPressed: _pickImageOrPdf,
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.upload_file),
+                    label: Text(loc.uploadReport),
+                    onPressed: _uploading ? null : _pickFile,
+                    style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
+                  ),
+                ),
+                if (_uploading)
+                  const Padding(
+                    padding: EdgeInsets.only(left: 12),
+                    child: SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2)),
+                  ),
+              ],
             ),
             if (_selectedFile != null) ...[
               const SizedBox(height: 12),
-              if (_selectedFile!.path.endsWith('.jpg') || _selectedFile!.path.endsWith('.png'))
+              if (_selectedFile!.path.toLowerCase().endsWith('.jpg') || _selectedFile!.path.toLowerCase().endsWith('.png'))
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Image.file(
-                    _selectedFile!,
-                    height: 180,
-                    fit: BoxFit.cover,
-                  ),
+                  child: Image.file(_selectedFile!, height: 180, fit: BoxFit.cover),
                 ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Text(
                   "📎 ${_selectedFile!.path.split('/').last}",
-                  style: const TextStyle(fontSize: 13, color: Colors.grey),
+                  style: textTheme.bodySmall?.copyWith(color: colorScheme.outline),
                 ),
               ),
             ],
-            const SizedBox(height: 16),
             if (_previewText.isNotEmpty)
               Container(
+                margin: const EdgeInsets.only(top: 12),
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.grey[100],
+                  color: colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Text("📄 ${loc.previewText}\n\n$_previewText", style: const TextStyle(fontSize: 14)),
+                child: Text("📄 ${loc.previewText}\n\n$_previewText", style: textTheme.bodyMedium),
               ),
             const SizedBox(height: 20),
             if (_loading)
@@ -252,13 +271,13 @@ class _ReportAnalyzerScreenState extends State<ReportAnalyzerScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.teal.shade50,
+                      color: colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Scrollbar(
                       thumbVisibility: true,
                       child: SingleChildScrollView(
-                        child: Text(_result, style: const TextStyle(fontSize: 16)),
+                        child: Text(_result, style: textTheme.bodyLarge),
                       ),
                     ),
                   ),
@@ -271,7 +290,9 @@ class _ReportAnalyzerScreenState extends State<ReportAnalyzerScreen> {
                         icon: const Icon(Icons.refresh),
                         label: Text(loc.clear),
                         onPressed: _clear,
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: colorScheme.errorContainer,
+                        ),
                       ),
                       ElevatedButton.icon(
                         icon: const Icon(Icons.replay),
@@ -289,7 +310,7 @@ class _ReportAnalyzerScreenState extends State<ReportAnalyzerScreen> {
               )
             else
               Center(
-                child: Text(loc.noResultsPlaceholder, style: const TextStyle(fontSize: 16)),
+                child: Text(loc.noResultsPlaceholder, style: textTheme.bodyLarge),
               ),
           ],
         ),
