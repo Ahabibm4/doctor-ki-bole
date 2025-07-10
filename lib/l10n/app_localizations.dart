@@ -358,6 +358,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'❌ File is too large (max 5MB). Please choose a smaller file.'**
   String get fileTooLarge;
+
+  /// No description provided for @stopListening.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop Listening'**
+  String get stopListening;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

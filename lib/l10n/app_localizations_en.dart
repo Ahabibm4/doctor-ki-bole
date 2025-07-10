@@ -141,4 +141,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fileTooLarge => '❌ File is too large (max 5MB). Please choose a smaller file.';
+
+  @override
+  String get stopListening => 'Stop Listening';
 }

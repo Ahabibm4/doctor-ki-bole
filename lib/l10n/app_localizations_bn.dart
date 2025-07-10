@@ -141,4 +141,7 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get fileTooLarge => '❌ ফাইলটি খুব বড় (সর্বোচ্চ ৫ এমবি)। ছোট একটি ফাইল নির্বাচন করুন।';
+
+  @override
+  String get stopListening => 'শোনা বন্ধ করুন';
 }

@@ -86,6 +86,7 @@
   "noResultsPlaceholder": "বিশ্লেষণের জন্য একটি রিপোর্ট আপলোড করুন।",
   "useCamera": "ক্যামেরা দিয়ে ছবি তুলুন",
   "pickFromGallery": "গ্যালারি থেকে ছবি বাছুন",
-  "pickPdf": "PDF ফাইল বাছুন"
+  "pickPdf": "PDF ফাইল বাছুন",
+  "stopListening": "শোনা বন্ধ করুন"
 
 }

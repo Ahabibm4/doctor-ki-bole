@@ -40,7 +40,10 @@ class _SavedResultsScreenState extends State<SavedResultsScreen> {
         title: Text(loc.delete),
         content: Text(loc.deleteConfirm),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(loc.cancel)),
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(loc.cancel),
+          ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
@@ -69,85 +72,106 @@ class _SavedResultsScreenState extends State<SavedResultsScreen> {
       appBar: AppBar(title: Text(loc.savedResults)),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
-          : _results.isEmpty
-              ? Center(
-                  child: Text(
-                    loc.noSavedResults,
-                    style: textTheme.bodyLarge?.copyWith(color: colorScheme.outline),
-                  ),
-                )
-              : RefreshIndicator(
-                  onRefresh: _loadResults,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    itemCount: _results.length,
-                    itemBuilder: (context, index) {
-                      final r = _results[index];
-                      final formattedDate = DateFormat('yyyy-MM-dd HH:mm')
-                          .format(r.timestamp.toLocal());
-
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        child: Card(
-                          elevation: 3,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          color: colorScheme.surfaceVariant,
-                          child: Padding(
-                            padding: const EdgeInsets.all(14),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Chip(
-                                      label: Text(
-                                        r.type == 'report' ? loc.analyzeReport : loc.symptomChecker,
-                                        style: const TextStyle(color: Colors.white),
-                                      ),
-                                      backgroundColor: r.type == 'report'
-                                          ? colorScheme.primary
-                                          : colorScheme.secondary,
-                                    ),
-                                    const Spacer(),
-                                    IconButton(
-                                      icon: Icon(Icons.delete, color: colorScheme.error),
-                                      tooltip: loc.delete,
-                                      onPressed: () => _confirmDelete(context, r.id!),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 6),
-                                _buildScrollableText("📥 ${r.input}", textTheme.bodyMedium),
-                                const SizedBox(height: 6),
-                                _buildScrollableText("💡 ${r.result}", textTheme.bodySmall,
-                                    maxHeight: 150),
-                                const SizedBox(height: 6),
-                                Text(
-                                  "⏰ $formattedDate",
-                                  style: textTheme.labelSmall?.copyWith(
-                                    color: colorScheme.outline,
-                                  ),
-                                ),
-                              ],
+          : RefreshIndicator(
+              onRefresh: _loadResults,
+              child: _results.isEmpty
+                  ? CustomScrollView(
+                      slivers: [
+                        SliverFillRemaining(
+                          hasScrollBody: false,
+                          child: Center(
+                            child: Text(
+                              loc.noSavedResults,
+                              style: textTheme.bodyLarge?.copyWith(
+                                color: colorScheme.outline,
+                              ),
                             ),
                           ),
                         ),
-                      );
-                    },
-                  ),
-                ),
+                      ],
+                    )
+                  : ListView.separated(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      itemCount: _results.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 8),
+                      itemBuilder: (context, index) {
+                        final r = _results[index];
+                        final formattedDate = DateFormat('yyyy-MM-dd HH:mm')
+                            .format(r.timestamp.toLocal());
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Hero(
+                            tag: 'result-${r.id}',
+                            child: Card(
+                              elevation: 3,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              color: colorScheme.surfaceVariant,
+                              child: Padding(
+                                padding: const EdgeInsets.all(14),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Chip(
+                                          label: Text(
+                                            r.type == 'report'
+                                                ? loc.analyzeReport
+                                                : loc.symptomChecker,
+                                            style: const TextStyle(color: Colors.white),
+                                          ),
+                                          backgroundColor: r.type == 'report'
+                                              ? colorScheme.primary
+                                              : colorScheme.secondary,
+                                        ),
+                                        const Spacer(),
+                                        IconButton(
+                                          icon: Icon(Icons.delete, color: colorScheme.error),
+                                          tooltip: loc.delete,
+                                          onPressed: () => _confirmDelete(context, r.id!),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 6),
+                                    _buildScrollableText("📥 ${r.input}", textTheme.bodyMedium),
+                                    const SizedBox(height: 6),
+                                    _buildScrollableText("💡 ${r.result}", textTheme.bodySmall,
+                                        maxHeight: 150),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      "⏰ $formattedDate",
+                                      style: textTheme.labelSmall?.copyWith(
+                                        color: colorScheme.outline,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+            ),
     );
   }
 
   Widget _buildScrollableText(String text, TextStyle? style, {double maxHeight = 80}) {
     return Container(
       constraints: BoxConstraints(maxHeight: maxHeight),
-      padding: const EdgeInsets.only(right: 4),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black12),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       child: Scrollbar(
         thumbVisibility: true,
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: Text(text, style: style),
+          child: SelectableText(text, style: style),
         ),
       ),
     );

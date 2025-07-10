@@ -161,110 +161,126 @@ class _SymptomCheckerScreenState extends State<SymptomCheckerScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(loc.symptomChecker)),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              TextField(
-                controller: _symptomController,
-                maxLines: 3,
-                autofocus: true,
-                style: theme.textTheme.bodyLarge,
-                decoration: InputDecoration(
-                  labelText: loc.enterSymptoms,
-                  prefixIcon: const Icon(Icons.health_and_safety),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: _clearAll,
-                  ),
-                  filled: true,
-                  fillColor: theme.colorScheme.surfaceVariant,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-              ),
-              if (_isListening)
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 400),
-                  height: _waveHeight,
-                  width: double.infinity,
-                  margin: const EdgeInsets.symmetric(vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.tealAccent.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  onEnd: () {
-                    if (_isListening) {
-                      setState(() {
-                        _waveHeight = _waveHeight == 10 ? 20 : 10;
-                      });
-                    }
-                  },
-                ),
-              Wrap(
-                spacing: 10,
-                runSpacing: 10,
-                children: [
-                  ElevatedButton.icon(
-                    icon: Icon(_isListening ? Icons.mic_off : Icons.mic),
-                    label: Text(loc.voiceInput),
-                    onPressed: _listen,
-                  ),
-                  ElevatedButton.icon(
-                    icon: const Icon(Icons.search),
-                    label: Text(loc.check),
-                    onPressed: _analyzeSymptoms,
-                  ),
-                  if (_result.isNotEmpty) ...[
-                    ElevatedButton.icon(
-                      icon: const Icon(Icons.refresh),
-                      label: Text(loc.clear),
-                      onPressed: _clearAll,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: theme.colorScheme.error,
-                        foregroundColor: theme.colorScheme.onError,
+        child: LayoutBuilder(
+          builder: (context, constraints) => SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: IntrinsicHeight(
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: _symptomController,
+                      maxLines: 3,
+                      autofocus: true,
+                      style: theme.textTheme.bodyLarge,
+                      decoration: InputDecoration(
+                        labelText: loc.enterSymptoms,
+                        prefixIcon: const Icon(Icons.health_and_safety),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: _clearAll,
+                        ),
+                        filled: true,
+                        fillColor: theme.colorScheme.surfaceVariant,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     ),
-                    ElevatedButton.icon(
-                      icon: const Icon(Icons.replay),
-                      label: Text(loc.retry),
-                      onPressed: _analyzeSymptoms,
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 400),
+                      height: _isListening ? _waveHeight : 0,
+                      width: double.infinity,
+                      margin: const EdgeInsets.symmetric(vertical: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.tealAccent.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      onEnd: () {
+                        if (_isListening) {
+                          setState(() {
+                            _waveHeight = _waveHeight == 10 ? 20 : 10;
+                          });
+                        }
+                      },
                     ),
-                    ElevatedButton.icon(
-                      icon: const Icon(Icons.share),
-                      label: Text(loc.share),
-                      onPressed: _shareResult,
-                    ),
-                  ],
-                ],
-              ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: _loading
-                    ? const Center(child: CircularProgressIndicator())
-                    : _result.isNotEmpty
-                        ? Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.surfaceVariant,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Scrollbar(
-                              thumbVisibility: true,
-                              child: SingleChildScrollView(
-                                child: Text(_result, style: theme.textTheme.bodyLarge),
-                              ),
-                            ),
-                          )
-                        : Center(
-                            child: Text(
-                              loc.noResultsPlaceholder,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: theme.colorScheme.outline,
-                              ),
+                    Wrap(
+                      spacing: 10,
+                      runSpacing: 10,
+                      alignment: WrapAlignment.center,
+                      children: [
+                        ElevatedButton.icon(
+                          icon: Icon(_isListening ? Icons.mic_off : Icons.mic),
+                          label: Text(loc.voiceInput),
+                          onPressed: _listen,
+                        ),
+                        ElevatedButton.icon(
+                          icon: const Icon(Icons.search),
+                          label: Text(loc.check),
+                          onPressed: _analyzeSymptoms,
+                        ),
+                        if (_result.isNotEmpty) ...[
+                          ElevatedButton.icon(
+                            icon: const Icon(Icons.refresh),
+                            label: Text(loc.clear),
+                            onPressed: _clearAll,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: theme.colorScheme.error,
+                              foregroundColor: theme.colorScheme.onError,
                             ),
                           ),
+                          ElevatedButton.icon(
+                            icon: const Icon(Icons.replay),
+                            label: Text(loc.retry),
+                            onPressed: _analyzeSymptoms,
+                          ),
+                          ElevatedButton.icon(
+                            icon: const Icon(Icons.share),
+                            label: Text(loc.share),
+                            onPressed: _shareResult,
+                          ),
+                        ],
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Expanded(
+                      child: _loading
+                          ? const Center(child: CircularProgressIndicator())
+                          : _result.isNotEmpty
+                              ? Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: theme.colorScheme.surfaceVariant,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Scrollbar(
+                                    thumbVisibility: true,
+                                    child: SingleChildScrollView(
+                                      child: Text(
+                                        _result,
+                                        style: theme.textTheme.bodyLarge,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 40),
+                                    child: Text(
+                                      loc.noResultsPlaceholder,
+                                      textAlign: TextAlign.center,
+                                      style: theme.textTheme.bodyMedium?.copyWith(
+                                        color: theme.colorScheme.outline,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                    ),
+                  ],
+                ),
               ),
-            ],
+            ),
           ),
         ),
       ),

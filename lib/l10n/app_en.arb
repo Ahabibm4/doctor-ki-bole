@@ -94,6 +94,7 @@
   "noResultsPlaceholder": "Please upload a report to analyze.",
   "useCamera": "Take Photo with Camera",
   "pickFromGallery": "Pick Image from Gallery",
-  "pickPdf": "Pick a PDF File"
+  "pickPdf": "Pick a PDF File",
+  "stopListening": "Stop Listening"
 
 }

@@ -35,7 +35,7 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -112,35 +112,46 @@ class _AnimatedCardState extends State<_AnimatedCard> {
           elevation: 6,
           color: widget.color,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          child: Padding(
-            padding: const EdgeInsets.all(22),
-            child: Row(
-              children: [
-                Text(widget.emoji, style: const TextStyle(fontSize: 40)),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.title,
-                        style: textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        widget.subtitle,
-                        style: textTheme.bodySmall?.copyWith(
-                          color: textTheme.bodySmall?.color?.withOpacity(0.7),
-                        ),
-                      ),
-                    ],
+          child: InkWell(
+            borderRadius: BorderRadius.circular(20),
+            splashColor: Colors.black12,
+            onTap: _navigate,
+            child: Padding(
+              padding: const EdgeInsets.all(22),
+              child: Row(
+                children: [
+                  Semantics(
+                    label: widget.title,
+                    child: Hero(
+                      tag: widget.route,
+                      child: Text(widget.emoji, style: const TextStyle(fontSize: 40)),
+                    ),
                   ),
-                ),
-                const Icon(Icons.chevron_right),
-              ],
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.title,
+                          style: textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          widget.subtitle,
+                          style: textTheme.bodySmall?.copyWith(
+                            color: textTheme.bodySmall?.color?.withOpacity(0.7),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Icon(Icons.chevron_right),
+                ],
+              ),
             ),
           ),
         ),
