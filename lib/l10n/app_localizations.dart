@@ -364,6 +364,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Stop Listening'**
   String get stopListening;
+
+  /// No description provided for @resultTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Result Viewer'**
+  String get resultTitle;
+
+  /// No description provided for @extractedText.
+  ///
+  /// In en, this message translates to:
+  /// **'Extracted Text'**
+  String get extractedText;
+
+  /// No description provided for @geminiResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Gemini Analysis'**
+  String get geminiResult;
+
+  /// No description provided for @autoSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved Automatically'**
+  String get autoSaved;
+
+  /// No description provided for @noInternet.
+  ///
+  /// In en, this message translates to:
+  /// **'❌ No internet connection.'**
+  String get noInternet;
+
+  /// No description provided for @noTextFound.
+  ///
+  /// In en, this message translates to:
+  /// **'❌ Couldn\'t extract any text.'**
+  String get noTextFound;
+
+  /// No description provided for @errorProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'❌ Something went wrong while processing.'**
+  String get errorProcessing;
+
+  /// No description provided for @fallbackMessageEn.
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ AI assistant is not available now. Please try again later.'**
+  String get fallbackMessageEn;
+
+  /// No description provided for @fallbackMessageBn.
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ এই মুহূর্তে AI সহকারী সাড়া দিচ্ছে না। একটু পর আবার চেষ্টা করুন।'**
+  String get fallbackMessageBn;
+
+  /// No description provided for @cameraUpload.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera Upload'**
+  String get cameraUpload;
+
+  /// No description provided for @cameraUploadDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo of your report'**
+  String get cameraUploadDesc;
+
+  /// No description provided for @uploadFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload File'**
+  String get uploadFile;
+
+  /// No description provided for @uploadFileDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload PDF, image or document'**
+  String get uploadFileDesc;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

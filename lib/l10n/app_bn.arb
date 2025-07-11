@@ -87,6 +87,19 @@
   "useCamera": "ক্যামেরা দিয়ে ছবি তুলুন",
   "pickFromGallery": "গ্যালারি থেকে ছবি বাছুন",
   "pickPdf": "PDF ফাইল বাছুন",
-  "stopListening": "শোনা বন্ধ করুন"
+  "stopListening": "শোনা বন্ধ করুন",
+  "resultTitle": "ফলাফল প্রদর্শন",
+  "extractedText": "টেক্সট এক্সট্র্যাক্ট করা হয়েছে",
+  "geminiResult": "Gemini বিশ্লেষণ",
+  "autoSaved": "স্বয়ংক্রিয়ভাবে সংরক্ষিত",
+  "noInternet": "❌ ইন্টারনেট সংযোগ নেই।",
+  "noTextFound": "❌ কোনো পাঠ্য খুঁজে পাওয়া যায়নি।",
+  "errorProcessing": "❌ বিশ্লেষণের সময় একটি ত্রুটি ঘটেছে।",
+  "fallbackMessageEn": "⚠️ AI সহকারী এখন উপলব্ধ নয়। পরে আবার চেষ্টা করুন।",
+  "fallbackMessageBn": "⚠️ এই মুহূর্তে AI সহকারী সাড়া দিচ্ছে না। একটু পর আবার চেষ্টা করুন।",
+  "cameraUpload": "ক্যামেরা আপলোড",
+  "cameraUploadDesc": "রিপোর্টের ছবি তুলুন",
+  "uploadFile": "ফাইল আপলোড করুন",
+  "uploadFileDesc": "PDF, ছবি বা ডকুমেন্ট আপলোড করুন"
 
 }

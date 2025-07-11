@@ -95,6 +95,19 @@
   "useCamera": "Take Photo with Camera",
   "pickFromGallery": "Pick Image from Gallery",
   "pickPdf": "Pick a PDF File",
-  "stopListening": "Stop Listening"
+  "stopListening": "Stop Listening",
+  "resultTitle": "Result Viewer",
+  "extractedText": "Extracted Text",
+  "geminiResult": "Gemini Analysis",
+  "autoSaved": "Saved Automatically",
+  "noInternet": "❌ No internet connection.",
+  "noTextFound": "❌ Couldn't extract any text.",
+  "errorProcessing": "❌ Something went wrong while processing.",
+  "fallbackMessageEn": "⚠️ AI assistant is not available now. Please try again later.",
+  "fallbackMessageBn": "⚠️ এই মুহূর্তে AI সহকারী সাড়া দিচ্ছে না। একটু পর আবার চেষ্টা করুন।",
+  "cameraUpload": "Camera Upload",
+  "cameraUploadDesc": "Take a photo of your report",
+  "uploadFile": "Upload File",
+  "uploadFileDesc": "Upload PDF, image or document"
 
 }

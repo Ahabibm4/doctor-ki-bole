@@ -144,4 +144,43 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get stopListening => 'শোনা বন্ধ করুন';
+
+  @override
+  String get resultTitle => 'ফলাফল প্রদর্শন';
+
+  @override
+  String get extractedText => 'টেক্সট এক্সট্র্যাক্ট করা হয়েছে';
+
+  @override
+  String get geminiResult => 'Gemini বিশ্লেষণ';
+
+  @override
+  String get autoSaved => 'স্বয়ংক্রিয়ভাবে সংরক্ষিত';
+
+  @override
+  String get noInternet => '❌ ইন্টারনেট সংযোগ নেই।';
+
+  @override
+  String get noTextFound => '❌ কোনো পাঠ্য খুঁজে পাওয়া যায়নি।';
+
+  @override
+  String get errorProcessing => '❌ বিশ্লেষণের সময় একটি ত্রুটি ঘটেছে।';
+
+  @override
+  String get fallbackMessageEn => '⚠️ AI সহকারী এখন উপলব্ধ নয়। পরে আবার চেষ্টা করুন।';
+
+  @override
+  String get fallbackMessageBn => '⚠️ এই মুহূর্তে AI সহকারী সাড়া দিচ্ছে না। একটু পর আবার চেষ্টা করুন।';
+
+  @override
+  String get cameraUpload => 'ক্যামেরা আপলোড';
+
+  @override
+  String get cameraUploadDesc => 'রিপোর্টের ছবি তুলুন';
+
+  @override
+  String get uploadFile => 'ফাইল আপলোড করুন';
+
+  @override
+  String get uploadFileDesc => 'PDF, ছবি বা ডকুমেন্ট আপলোড করুন';
 }

@@ -144,4 +144,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get stopListening => 'Stop Listening';
+
+  @override
+  String get resultTitle => 'Result Viewer';
+
+  @override
+  String get extractedText => 'Extracted Text';
+
+  @override
+  String get geminiResult => 'Gemini Analysis';
+
+  @override
+  String get autoSaved => 'Saved Automatically';
+
+  @override
+  String get noInternet => '❌ No internet connection.';
+
+  @override
+  String get noTextFound => '❌ Couldn\'t extract any text.';
+
+  @override
+  String get errorProcessing => '❌ Something went wrong while processing.';
+
+  @override
+  String get fallbackMessageEn => '⚠️ AI assistant is not available now. Please try again later.';
+
+  @override
+  String get fallbackMessageBn => '⚠️ এই মুহূর্তে AI সহকারী সাড়া দিচ্ছে না। একটু পর আবার চেষ্টা করুন।';
+
+  @override
+  String get cameraUpload => 'Camera Upload';
+
+  @override
+  String get cameraUploadDesc => 'Take a photo of your report';
+
+  @override
+  String get uploadFile => 'Upload File';
+
+  @override
+  String get uploadFileDesc => 'Upload PDF, image or document';
 }
